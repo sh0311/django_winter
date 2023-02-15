@@ -93,12 +93,17 @@
                 {% for p in post_list %}
                 <!-- Blog post-->
                 <div class="card mb-4">
+                    {% if p.head_image %}
                     <img class="card-img-top" src="{{p.head_image.url}}"
-                            alt="Bird" >
+                            alt="{{p}} head image" >
+                    {% endif %}
                     <div class="card-body">
-                        <div class="small text-muted">January 1, 2022</div>
-                        <h2 class="card-title h4">{{p.title}}</h2>
-                        <p class="card-text">{{p.content}}</p>
+
+                        <h1 class="card-title h4">{{p.title}}</h1>
+                        {% if p.hook_text %}
+                        <h5 class="text-muted">{{p.hook_text}}</h5>
+                        {% endif %}
+                        <p class="card-text">{{p.content | truncatewords:20 }}</p>
                         <a href="{{p.get_absolute_url}}" class="btn btn-primary">Read more &rarr;</a>
                     </div>
                     <div class="card-footer text-muted">
@@ -140,16 +145,16 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <ul class="list-unstyled mb-0">
-                                    <li><a href="#!">Web Design</a></li>
-                                    <li><a href="#!">HTML</a></li>
-                                    <li><a href="#!">Freebies</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-sm-6">
-                                <ul class="list-unstyled mb-0">
-                                    <li><a href="#!">JavaScript</a></li>
-                                    <li><a href="#!">CSS</a></li>
-                                    <li><a href="#!">Tutorials</a></li>
+                                        <li><a href="#!">공부</a></li>
+                                        <li><a href="#!">음식</a></li>
+                                        <li><a href="#!">장소</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-6">
+                                    <ul class="list-unstyled mb-0">
+                                        <li><a href="#!">일상</a></li>
+                                        <li><a href="#!">음악</a></li>
+                                        <li><a href="#!">드라마/영화</a></li>
                                 </ul>
                             </div>
                         </div>

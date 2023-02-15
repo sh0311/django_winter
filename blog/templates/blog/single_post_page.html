@@ -12,6 +12,7 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap.min.css' %}" media="screen">
         <link href="{% static 'blog/css/blog-post.css' %}" media="screen" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/501b211fde.js" crossorigin="anonymous"></script>
     </head>
 
 
@@ -56,6 +57,11 @@
                         <hr>
                         <!-- Post content-->
                         <p>{{post.content}}</p>
+                        {% if post.file_upload %}
+                        <a href="{{post.file_upload.url}}" class="btn btn-outline-success" role="button"download>
+                            Download
+                        </a>
+                        {% endif %}
 
                         <hr>
                     </article>
