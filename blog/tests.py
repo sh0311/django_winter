@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
-from .models import Post, Category
+from .models import Post, Category, Tag
 
 # Create your tests here.
 class TestView(TestCase):
@@ -11,6 +11,27 @@ class TestView(TestCase):
         self.user_Derek=User.objects.create_user(username='Derek', password='somepassword')
         self.category_food=Category.objects.create(name='food', slug='food')
         self.category_study=Category.objects.create(name='study',slug='study')
+
+        self.tag_matzip=Tag.objects.create(name='맛집', slug='맛집')
+        self.tag_kagong=Tag.objects.create(name='카공', slug='카공')
+        self.tag_trip=Tag.objects.create(name='여행', slug='여행')
+
+    def test_tag_page(self):
+        response=self.client.get(self.tag_matzip.get_absolte_url())
+        self.assertEqual(response.status_code, 200)
+        soup=BeautifulSoup(response.content, 'html.parser')
+
+        self.navbar_test(soup)
+        self.category_card_test(soup)
+
+        self.assertIn(self.tag_matzip.name,soup.h1.text)
+
+        main_area=soup.find('div', id='main-area')
+        self.assertIn(self.tag_matzip.name, main_area.text)
+        self.assertIn(self.post_001.title, main_area.text)
+        self.assertIn(self.post_002.title, main_area.text)
+        self.assertIn(self.post_003.title, main_area.text)
+
 
 
     def navbar_test(self, soup):
@@ -53,10 +74,17 @@ class TestView(TestCase):
         post_001_card=main_area.find('div', id='post-1')
         self.assertIn(self.post_001.title, post_001_card.text)
         self.assertIn(self.post_001.category.name, post_001_card.text)
+        self.assertIn(self.tag_trip.name, post_001_card.text)
+        self.assertIn(self.tag_matzipname, post_001_card.text)
+        self.assertIn(self.tag_kagong.name, post_001_card.text)
+
 
         post_002_card = main_area.find('div', id='post-2')
         self.assertIn(self.post_002.title, post_002_card.text)
         self.assertIn(self.post_002.category.name, post_002_card.text)
+        self.assertIn(self.tag_trip.name, post_001_card.text)
+        self.assertIn(self.tag_matzipname, post_001_card.text)
+        self.assertIn(self.tag_kagong.name, post_001_card.text)
 
         post_003_card = main_area.find('div', id='post-3')
         self.assertIn('미분류', post_001_card.text)
@@ -64,6 +92,9 @@ class TestView(TestCase):
 
         self.assertIn(self.user_alice.username.upper(), main_area.text)
         self.assertIn(self.user_Derek.username.upper(), main_area.text)
+        self.assertIn(self.tag_trip.name, post_001_card.text)
+        self.assertIn(self.tag_matzipname, post_001_card.text)
+        self.assertIn(self.tag_kagong.name, post_001_card.text)
 
         #텍스트가 없는 경우
         Post.objects.all().delete()

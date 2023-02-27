@@ -2,8 +2,9 @@
 
 {% block main_area %}
 
-                <h1>Blog {% if category %}<span class="badge badge-secondary">{{category}}</span>{% endif %}</h1>
-
+                <h1>Blog
+                    {% if category %}<span class="badge badge-secondary">{{category}}</span>{% endif %}
+                    {% if tag %}<span class="badge badge-light"><i class="fas-tags"></i>{{tag}}({{ tag.post_set.count }})</span>{% endif %}</h1>
 
                 <!-- Blog post-->
                 {% if post_list.exists %}
@@ -17,23 +18,36 @@
                     {% endif %}
                     <div class="card-body">
                         {% if p.category %}
-                        <span class="badge badge-secondary float-right">{{p.category}}</span>
+                             <span class="badge badge-secondary float-right">{{p.category}}</span>
                         {% else %}
-                        <span class="badge badge-secondary float-right">미분류</span>
+                            <span class="badge badge-secondary float-right">미분류</span>
                         {% endif %}
                         <h2 class="card-title h4">{{p.title}}</h2>
                         {% if p.hook_text %}
                         <h5 class="text-muted">{{p.hook_text}}</h5>
                         {% endif %}
                         <p class="card-text">{{p.content | truncatewords:20 }}</p>
+
+
+
+                        {% if p.tags.exists %}
+                            <i class="fas fa-tags"></i>
+                            {% for tag in p.tags.iterator %}
+                                <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light">{{tag}}</span></a>
+                            {% endfor %}
+                        <br/>
+                        <br/>
+                        {% endif %}
+
                         <a href="{{p.get_absolute_url}}" class="btn btn-primary">Read more &rarr;</a>
                     </div>
                     <div class="card-footer text-muted">
                         Posted on {{p.created_at}} by
                         <a href="#">{{p.author | upper}}</a>
                         </div>
-                </div>
-                {% endfor %}
+                    </div>
+               {% endfor %}
+
                 {% else %}
                 <h3>아직 게시물이 없습니다.</h3>
                 {% endif %}
@@ -50,4 +64,4 @@
                         <li class="page-item"><a class="page-link" href="#!">15</a></li>
                         <li class="page-item"><a class="page-link" href="#!">Older</a></li>
                     </ul>
-            {% endblock %}
+                    {% endblock %}
